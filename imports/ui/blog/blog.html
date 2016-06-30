@@ -1,0 +1,10 @@
+<template name="Blog">
+  <hr/>
+  <input type="text" placeHolder="title" id="title"/>
+  <input type="text" placeHolder="content" id="content"/>
+  <button id="submit-post">post</button>
+  <hr/>
+  {{#each posts}}
+  {{title}} | {{content}} | <button class="remove">remove</button><input type="text" class="sharingTarget"/><button class="share">Share</button><br/>
+  {{/each}}
+</template>
