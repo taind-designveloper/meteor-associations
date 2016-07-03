@@ -65,13 +65,16 @@ Mongo.Collection.prototype.has = function(target, association) {
             let isAllowed  = props.find.apply(context, [selector, projector])
             if(!isAllowed) return [];
           }
+          let keys = Object.keys(selector);
+          if(keys.length === 1 && keys[0] === '_id') 
+            selector = selector._id;
           let result = target.find(selector, projector);
           let contextAction = {};
           for(let actionName in actions) {
             if(actionName !== '_self') {
               contextAction[actionName] = function() {
                 let args = _.toArray(arguments);
-                actions._self.context = {selector, projector};
+                actions._self.ctx = {target, selector, projector};
                 return actions[actionName].apply(actions._self, args);
               }
             }
@@ -95,7 +98,22 @@ Mongo.Collection.prototype.has = function(target, association) {
             let isAllowed = props.findOne.apply(context, [selector, projector])
             if(!isAllowed) return;
           }
-          return target.findOne(selector, projector);
+          let keys = Object.keys(selector);
+          if(keys.length === 1 && keys[0] === '_id') 
+            selector = selector._id;
+          let result = target.findOne(selector, projector);
+          if(result) selector = result._id;
+          let contextAction = {};
+          for(let actionName in actions) {
+            if(actionName !== '_self') {
+              contextAction[actionName] = function() {
+                let args = _.toArray(arguments);
+                actions._self.ctx = {target, selector, projector};
+                return actions[actionName].apply(actions._self, args);
+              }
+            }
+          }
+          return _.extend(contextAction, result);
         },
         /*
         * remove documents 

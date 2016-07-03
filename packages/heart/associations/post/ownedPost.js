@@ -15,8 +15,12 @@ class ownedPost extends Association {
     return true;
   }
   share(userId) {
-    let selector = this.context.selector;
-    console.log(selector);
+    let {target, selector} = this.ctx;
+    target.update(selector, {
+      $push: {
+        'permission.reads': userId,
+      }
+    })
   }
 }
 export {ownedPost};
