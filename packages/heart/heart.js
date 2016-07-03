@@ -1,30 +1,7 @@
-import {users} from './collections/users.js';
-import {posts} from './collections/posts.js';
-// ownedPost relationship
-class ownedPost extends Association {
-  query() {
-    return {
-      'permission.owners': this._id,
-    }
-  }
-  insert(post) {
-    post.permission = {
-      owners: [this._id],
-      comments: [this._id],
-      reads: [this._id],
-      edits: [this._id],
-    }
-    return true;
-  }
-}
-// readPost relationship
-class readPost extends Association {
-  query() {
-    return {
-      'permission.reads': this._id,
-    }
-  }
-}
+import {users} from './collections/users';
+import {posts} from './collections/posts';
+import {ownedPost} from './associations/post/ownedPost';
+import {readPost} from './associations/post/readPost';
 
 users.has(posts, new ownedPost());
 users.has(posts, new readPost());
