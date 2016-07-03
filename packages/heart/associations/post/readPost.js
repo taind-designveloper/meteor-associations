@@ -5,5 +5,11 @@ class readPost extends Association {
       'permission.reads': this._id,
     }
   }
+  update() {
+    return false;
+  }
+  remove() {
+    return false;
+  }
 }
 export {readPost};

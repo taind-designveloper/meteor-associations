@@ -14,5 +14,9 @@ class ownedPost extends Association {
     }
     return true;
   }
+  share(userId) {
+    let selector = this.context.selector;
+    console.log(selector);
+  }
 }
 export {ownedPost};

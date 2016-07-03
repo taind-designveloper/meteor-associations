@@ -1,10 +1,12 @@
 import {Association} from './association';
 
-Mongo.Collection.prototype.has = function(target, props) {
+Mongo.Collection.prototype.has = function(target, association) {
   this.associations = this.associations || [];
-  this.associations.push({target, props: props.associate()});
+  this.associations.push({target, association});
   this._transform = (doc)=> {
-    this.associations.forEach(({target, props})=> {
+    this.associations.forEach(({target, association})=> {
+      let props = association.associate();
+      let actions = association.actions();
       doc[props.on] = {
         /*
          * insert new document, add query to target doc by default 
@@ -63,7 +65,18 @@ Mongo.Collection.prototype.has = function(target, props) {
             let isAllowed  = props.find.apply(context, [selector, projector])
             if(!isAllowed) return [];
           }
-          return target.find(selector, projector);
+          let result = target.find(selector, projector);
+          let contextAction = {};
+          for(let actionName in actions) {
+            if(actionName !== '_self') {
+              contextAction[actionName] = function() {
+                let args = _.toArray(arguments);
+                actions._self.context = {selector, projector};
+                return actions[actionName].apply(actions._self, args);
+              }
+            }
+          }
+          return _.extend(contextAction, result);
         },
         /*
         * find one document
