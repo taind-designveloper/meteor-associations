@@ -1,6 +1,8 @@
+import {Association} from './association';
+
 Mongo.Collection.prototype.has = function(target, props) {
   this.associations = this.associations || [];
-  this.associations.push({target, props});
+  this.associations.push({target, props: props.associate()});
   this._transform = (doc)=> {
     this.associations.forEach(({target, props})=> {
       doc[props.on] = {
@@ -118,3 +120,4 @@ Mongo.Collection.prototype.has = function(target, props) {
     return doc;
   }
 }
+export {Association};

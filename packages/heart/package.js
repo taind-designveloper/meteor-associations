@@ -13,6 +13,7 @@ Package.describe({
 Package.onUse(function(api) {
   api.versionsFrom('1.3.3');
   api.use('ecmascript');
+  api.use('check');
   api.use('underscore');
   api.use('aldeed:collection2@2.9.1');
   api.use('accounts-password');

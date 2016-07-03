@@ -1,15 +1,13 @@
 import {users} from './collections/users.js';
 import {posts} from './collections/posts.js';
-
-//  posts that user owns
-let ownedPost = {
-  on: 'ownedPost',
-  query: function() {
+// ownedPost relationship
+class ownedPost extends Association {
+  query() {
     return {
       'permission.owners': this._id,
     }
-  },
-  insert: function(post) {
+  }
+  insert(post) {
     post.permission = {
       owners: [this._id],
       comments: [this._id],
@@ -17,27 +15,24 @@ let ownedPost = {
       edits: [this._id],
     }
     return true;
-  },
+  }
 }
-// posts that user can read
-let readPost = {
-  on: 'readPost',
-  query: function() {
+// readPost relationship
+class readPost extends Association {
+  query() {
     return {
       'permission.reads': this._id,
     }
-  },
-  insert: ()=> false,
-  update: ()=> false,
-  remove: ()=> false,
+  }
 }
-// 
-users.has(posts, ownedPost);
-users.has(posts, readPost);
+
+users.has(posts, new ownedPost());
+users.has(posts, new readPost());
 
 posts.allow({
   insert(userId, post) {
-    return ownedPost.insert.apply({
+    let insert = new ownedPost().associate().insert;
+    return insert.apply({
       _id: userId,
     }, [post]);
   },

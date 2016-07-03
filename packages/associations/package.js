@@ -13,14 +13,10 @@ Package.describe({
 Package.onUse(function(api) {
   api.versionsFrom('1.3.3');
   api.use('ecmascript');
+  api.use('check');
   api.use('mongo');
   api.use('underscore');
-  api.mainModule('associations.js');
+  api.mainModule('has.js');
+  api.export('Association');
 });
 
-Package.onTest(function(api) {
-  api.use('ecmascript');
-  api.use('tinytest');
-  api.use('associations');
-  api.mainModule('associations-tests.js');
-});
