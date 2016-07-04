@@ -73,6 +73,7 @@ Mongo.Collection.prototype.has = function(target, association) {
               contextAction[actionName] = function() {
                 let args = _.toArray(arguments);
                 actions._self.ctx = {target, selector, projector};
+                _.extend(actions._self, result);
                 return actions[actionName].apply(actions._self, args);
               }
             }
@@ -106,6 +107,7 @@ Mongo.Collection.prototype.has = function(target, association) {
               contextAction[actionName] = function() {
                 let args = _.toArray(arguments);
                 actions._self.ctx = {target, selector, projector};
+                _.extend(actions._self, result);
                 return actions[actionName].apply(actions._self, args);
               }
             }
