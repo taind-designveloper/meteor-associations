@@ -130,7 +130,7 @@ Mongo.Collection.prototype.has = function(target, association) {
             let isAllowed = props.remove.apply(context, [selector])
             if(!isAllowed) return 0;
           }
-          let keys = Object.keys(findQuery);
+          let keys = Object.keys(selector);
           if(keys.length === 1 && keys[0] === '_id') 
             selector = selector._id;
           return target.remove(selector);

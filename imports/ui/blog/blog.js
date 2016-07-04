@@ -13,7 +13,7 @@ Template.Blog.events({
     $('#content').val('');
   },
   'click .remove': function() {
-    posts.remove(this._id);
+    Meteor.call('post.remove', this._id);
   },
   'click .share': function(event) {
     let email = event.target.previousSibling.value;
