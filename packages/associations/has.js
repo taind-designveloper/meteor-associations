@@ -43,8 +43,7 @@ Mongo.Collection.prototype.has = function(target, association) {
             let isAllowed = props.update.apply(context, [selector, modifier, multiplier])
             if(!isAllowed) return 0;
           }
-          let keys = Object.keys(selector);
-          if(keys.length === 1 && keys[0] === '_id') 
+          if(Match.test(selector, {_id: String}))
             selector = selector._id;
           return target.update(selector, modifier, multiplier);
         },
@@ -65,8 +64,7 @@ Mongo.Collection.prototype.has = function(target, association) {
             let isAllowed  = props.find.apply(context, [selector, projector])
             if(!isAllowed) return [];
           }
-          let keys = Object.keys(selector);
-          if(keys.length === 1 && keys[0] === '_id') 
+          if(Match.test(selector, {_id: String}))
             selector = selector._id;
           let result = target.find(selector, projector);
           let contextAction = {};
@@ -98,8 +96,7 @@ Mongo.Collection.prototype.has = function(target, association) {
             let isAllowed = props.findOne.apply(context, [selector, projector])
             if(!isAllowed) return;
           }
-          let keys = Object.keys(selector);
-          if(keys.length === 1 && keys[0] === '_id') 
+          if(Match.test(selector, {_id: String}))
             selector = selector._id;
           let result = target.findOne(selector, projector);
           if(result) selector = result._id;
@@ -130,8 +127,7 @@ Mongo.Collection.prototype.has = function(target, association) {
             let isAllowed = props.remove.apply(context, [selector])
             if(!isAllowed) return 0;
           }
-          let keys = Object.keys(selector);
-          if(keys.length === 1 && keys[0] === '_id') 
+          if(Match.test(selector, {_id: String}))
             selector = selector._id;
           return target.remove(selector);
         }

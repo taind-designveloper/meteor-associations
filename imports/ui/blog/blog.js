@@ -8,7 +8,7 @@ Template.Blog.events({
     let user = Meteor.user();
     let title = $('#title').val();
     let content = $('#content').val();
-    if(user) user.ownedPost.insert({title, content});
+    Meteor.call('post.insert', {title, content});
     $('#title').val('');
     $('#content').val('');
   },
@@ -17,7 +17,11 @@ Template.Blog.events({
   },
   'click .share': function(event) {
     let email = event.target.previousSibling.value;
-    console.log(email);
+    Meteor.call('post.share', {
+      postId: this._id,
+      email
+    });
+    event.target.previousSibling.value = '';
   }
 });
 
